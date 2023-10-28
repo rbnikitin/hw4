@@ -1,0 +1,21 @@
+name: test ci
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env: 
+      ssh_key: ${{ secrets.SSH_KEY }}
+      seed: ${{ vars.SEED }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - run: mkdir -p ~/.ssh
+    - run: echo $ssh_key | base64 -d > ~/.ssh/id_rsa
+    - run: chmod 0600 ~/.ssh/id_rsa
+    - run: python3 test.py
+    - run: ssh -o StrictHostKeyChecking=no bdb2c2023q4_guest_3@brain-client.bigdatateam.org "mkdir -p ./roman && touch ./roman/task41.txt"
+    - run: python3 dz4.py $seed
+    - run: scp dz4.py bdb2c2023q4_guest_3@brain-client.bigdatateam.org:~/roman/dz4.py 
+    - run: ssh -o StrictHostKeyChecking=no bdb2c2023q4_guest_3@brain-client.bigdatateam.org  "python3 ./roman/dz4.py $seed > ./roman/task42.txt"
+    - run: echo "OK"
