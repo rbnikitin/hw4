@@ -1,12 +1,13 @@
-import random
+import random, sys
 
-def checksum(x: list[int]) -> int:
+def checksum(x):
   chsum = 0
   for i in x:
     chsum = (chsum + i) * 113
   chsum = chsum % 10000007
   return chsum
-def is_prime(x: int) -> bool:
+
+def is_prime(x):
     if x <= 1:
         return False
 
@@ -14,7 +15,7 @@ def is_prime(x: int) -> bool:
         if x % i == 0:
             return False
     return True
-def primes(count: int) -> list[int]:
+def primes(count):
     primes_list = []
     num = 1
     while len(primes_list) < count:
@@ -23,10 +24,13 @@ def primes(count: int) -> list[int]:
         num += 1
     return primes_list
 
-def pipeline() -> int:
+def pipeline(seed):
     numbers = primes(1000)
-    random.Random(100).shuffle(numbers)
+    random.Random(int(seed)).shuffle(numbers)
     return checksum(numbers)
 
 if __name__ == '__main__':
-    exit(main())
+   print(pipeline(sys.argv[1]))
+   exit()
+
+
